@@ -13,6 +13,8 @@ const server = new ApolloServer<Context>({
 })
 
 export default startServerAndCreateNextHandler<NextApiRequest, Context>(server, {
-    context: async (req, res) =>
-        ({req, res, repository: createRepository(await getDbInstance('phone_app'))})
+    context: async (req, res) => {
+        const repository = createRepository(await getDbInstance('phone_app'));
+        return ({req, res, manufacturerRepository: repository, phoneRepository: repository});
+    }
 })

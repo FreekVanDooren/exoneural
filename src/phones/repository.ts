@@ -1,4 +1,4 @@
-import {ManufacturerModel, PhoneModel, Repository} from "@/phones/model";
+import {ManufacturerModel, ManufacturerRepository, PhoneModel, PhoneRepository} from "@/phones/model";
 import {Db, ObjectId, WithId} from "mongodb";
 import {Document} from "bson";
 
@@ -13,28 +13,28 @@ const asPhoneModel = (phone: WithId<Document>): PhoneModel => ({
     manufacturerID: phone.manufacturerID
 });
 
-export const createRepository = (db: Db): Repository => {
-    const manufacturerByID: Repository['manufacturerByID'] = async (id) => {
+export const createRepository = (db: Db): PhoneRepository & ManufacturerRepository => {
+    const manufacturerByID: ManufacturerRepository['manufacturerByID'] = async (id) => {
         const manufacturer = await db.collection('manufacturers').findOne({_id: new ObjectId(id)});
         if (!manufacturer) {
             return null;
         }
         return asManufacturerModel(manufacturer);
     };
-    const manufacturerByName: Repository['manufacturerByName'] = async (name) => {
+    const manufacturerByName: ManufacturerRepository['manufacturerByName'] = async (name) => {
         const manufacturer = await db.collection('manufacturers').findOne({name});
         if (!manufacturer) {
             return null;
         }
         return asManufacturerModel(manufacturer);
     };
-    const manufacturers: Repository['manufacturers'] = async () => {
+    const manufacturers: ManufacturerRepository['manufacturers'] = async () => {
         const manufacturers = await db.collection('manufacturers')
             .find()
             .map(asManufacturerModel);
         return manufacturers.toArray();
     };
-    const addManufacturer: Repository['addManufacturer'] = async (manufacturer) => {
+    const addManufacturer: ManufacturerRepository['addManufacturer'] = async (manufacturer) => {
         const {insertedId: id} = await db.collection('manufacturers').insertOne({
             ...manufacturer,
             created_at: new Date(),
@@ -42,7 +42,7 @@ export const createRepository = (db: Db): Repository => {
         return {...manufacturer, id};
     }
 
-    const phoneById: Repository['phoneById'] = async (id) => {
+    const phoneById: PhoneRepository['phoneById'] = async (id) => {
         const phone = await db.collection('phones').findOne({_id: new ObjectId(id)});
         if (!phone) {
             return null
@@ -50,14 +50,14 @@ export const createRepository = (db: Db): Repository => {
         return asPhoneModel(phone)
     }
 
-    const phones: Repository['phones'] = async () => {
+    const phones: PhoneRepository['phones'] = async () => {
         const phones = await db.collection('phones')
             .find()
             .map(asPhoneModel);
         return phones.toArray();
     };
 
-    const addPhone: Repository['addPhone'] = async (phone, manufacturerModel) => {
+    const addPhone: PhoneRepository['addPhone'] = async (phone, manufacturerModel) => {
         const model = {
             ...phone,
             manufacturerID: manufacturerModel.id,
@@ -68,7 +68,7 @@ export const createRepository = (db: Db): Repository => {
         });
         return {...model, id}
     }
-    const updatePhone: Repository['updatePhone'] = async (phone) => {
+    const updatePhone: PhoneRepository['updatePhone'] = async (phone) => {
         await db.collection('phones').updateOne({_id: phone.id}, {$set: phone})
     }
     return {
