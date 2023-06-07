@@ -35,6 +35,17 @@ export const resolvers: Resolvers = {
             const phone = await repository.addPhone({name}, manufacturerEntity)
 
             return {...phone, __typename: 'Phone'};
+        },
+        updatePhone: async (_, {input: {phone: phoneId, name}}, {repository}) => {
+            const currentPhone = await repository.phoneById(phoneId)
+            if (!currentPhone) {
+                return {__typename: 'MutationError', message: `Phone: ${currentPhone} does not exist`}
+            }
+
+            const updatedPhone = {...currentPhone, name};
+            await repository.updatePhone(updatedPhone)
+
+            return {...updatedPhone, __typename: 'Phone'};
         }
     },
 };

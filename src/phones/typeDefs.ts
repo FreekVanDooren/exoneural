@@ -31,8 +31,15 @@ export const typeDefs = gql`
     }
     union AddPhoneResult = Phone | MutationError
 
+    input UpdatePhoneInput {
+        name: String!
+        phone: ID!
+    }
+    union UpdatePhoneResult = Phone | MutationError
+
     type Mutation {
         addManufacturer(input: AddManufacturerInput!): AddManufacturerResult!
         addPhone(input: AddPhoneInput!): AddPhoneResult!
+        updatePhone(input: UpdatePhoneInput!): UpdatePhoneResult!
     }
 `

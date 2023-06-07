@@ -31,6 +31,7 @@ interface PhoneRepository {
     phones: () => Promise<PhoneModel[] | null>;
     phoneById: (id: string) => Promise<PhoneModel | null>;
     addPhone: (phone: Pick<PhoneModel, 'name'>, manufacturerModel: ManufacturerModel) => Promise<PhoneModel>;
+    updatePhone: (phone: PhoneModel) => Promise<void>
 }
 
 /**

@@ -40,6 +40,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addManufacturer: AddManufacturerResult;
   addPhone: AddPhoneResult;
+  updatePhone: UpdatePhoneResult;
 };
 
 
@@ -50,6 +51,11 @@ export type MutationAddManufacturerArgs = {
 
 export type MutationAddPhoneArgs = {
   input: AddPhoneInput;
+};
+
+
+export type MutationUpdatePhoneArgs = {
+  input: UpdatePhoneInput;
 };
 
 export type MutationError = {
@@ -75,6 +81,13 @@ export type Query = {
 export type QueryPhoneArgs = {
   id: Scalars['ID']['input'];
 };
+
+export type UpdatePhoneInput = {
+  name: Scalars['String']['input'];
+  phone: Scalars['ID']['input'];
+};
+
+export type UpdatePhoneResult = MutationError | Phone;
 
 export type AdditionalEntityFields = {
   path?: InputMaybe<Scalars['String']['input']>;
@@ -152,6 +165,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
   AddManufacturerResult: ( ManufacturerModel ) | ( MutationError );
   AddPhoneResult: ( MutationError ) | ( PhoneModel );
+  UpdatePhoneResult: ( MutationError ) | ( PhoneModel );
 };
 
 
@@ -168,6 +182,8 @@ export type ResolversTypes = {
   MutationError: ResolverTypeWrapper<MutationError>;
   Phone: ResolverTypeWrapper<PhoneModel>;
   Query: ResolverTypeWrapper<{}>;
+  UpdatePhoneInput: UpdatePhoneInput;
+  UpdatePhoneResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['UpdatePhoneResult']>;
   AdditionalEntityFields: AdditionalEntityFields;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
@@ -185,6 +201,8 @@ export type ResolversParentTypes = {
   MutationError: MutationError;
   Phone: PhoneModel;
   Query: {};
+  UpdatePhoneInput: UpdatePhoneInput;
+  UpdatePhoneResult: ResolversUnionTypes<ResolversParentTypes>['UpdatePhoneResult'];
   AdditionalEntityFields: AdditionalEntityFields;
   Boolean: Scalars['Boolean']['output'];
 };
@@ -253,6 +271,7 @@ export type ManufacturerResolvers<ContextType = Context, ParentType extends Reso
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addManufacturer?: Resolver<ResolversTypes['AddManufacturerResult'], ParentType, ContextType, RequireFields<MutationAddManufacturerArgs, 'input'>>;
   addPhone?: Resolver<ResolversTypes['AddPhoneResult'], ParentType, ContextType, RequireFields<MutationAddPhoneArgs, 'input'>>;
+  updatePhone?: Resolver<ResolversTypes['UpdatePhoneResult'], ParentType, ContextType, RequireFields<MutationUpdatePhoneArgs, 'input'>>;
 };
 
 export type MutationErrorResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MutationError'] = ResolversParentTypes['MutationError']> = {
@@ -273,6 +292,10 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   phones?: Resolver<Maybe<Array<Maybe<ResolversTypes['Phone']>>>, ParentType, ContextType>;
 };
 
+export type UpdatePhoneResultResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UpdatePhoneResult'] = ResolversParentTypes['UpdatePhoneResult']> = {
+  __resolveType: TypeResolveFn<'MutationError' | 'Phone', ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = Context> = {
   AddManufacturerResult?: AddManufacturerResultResolvers<ContextType>;
   AddPhoneResult?: AddPhoneResultResolvers<ContextType>;
@@ -281,6 +304,7 @@ export type Resolvers<ContextType = Context> = {
   MutationError?: MutationErrorResolvers<ContextType>;
   Phone?: PhoneResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  UpdatePhoneResult?: UpdatePhoneResultResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = Context> = {

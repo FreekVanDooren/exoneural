@@ -68,6 +68,9 @@ export const createRepository = (db: Db): Repository => {
         });
         return {...model, id}
     }
+    const updatePhone: Repository['updatePhone'] = async (phone) => {
+        await db.collection('phones').updateOne({_id: phone.id}, {$set: phone})
+    }
     return {
         manufacturers,
         manufacturerByID,
@@ -76,5 +79,6 @@ export const createRepository = (db: Db): Repository => {
         phoneById,
         phones,
         addPhone,
+        updatePhone,
     }
 }
