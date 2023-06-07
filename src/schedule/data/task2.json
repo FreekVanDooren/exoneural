@@ -1,0 +1,18 @@
+[
+  {
+    "secAfterMidnight": 3600,
+    "payload": "hello"
+  },
+  {
+    "secAfterMidnight": 3615,
+    "payload": "hej"
+  },
+  {
+    "secAfterMidnight": 3645,
+    "payload": "hola"
+  },
+  {
+    "secAfterMidnight": 86385,
+    "payload": "hi"
+  }
+]

@@ -1,34 +1,152 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) project bootstrapped
+with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
+
+### Setup
+
+```bash
+docker-compose up
+```
+
+```bash
+npm install
+```
+
+### Task 1
 
 First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/api/phones](http://localhost:3000/api/phones) in the browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Queries
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Sample queries:
 
-## Learn More
+```
+query SampleQueries($phoneId: ID!) {
+  phone(id: $phoneId) {
+    id
+    name
+    manufacturer {
+      id
+      name
+    }
+  }
+  manufacturers {
+    id
+    name
+  }
+  phones {
+    id
+    name
+  }
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+Variables:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+{
+  "phoneId": "<PHONE_ID>"
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+#### Mutations
 
-## Deploy on Vercel
+##### Add Manufacturer
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+mutation AddManufacturer($input: AddManufacturerInput!) {
+  addManufacturer(input: $input) {
+    ... on Manufacturer {
+      id
+      name
+    }
+    ... on MutationError {
+      message
+    }
+  }
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Variables:
+
+```
+{
+  "input": {
+    "name": "Apple"
+  }
+}
+```
+
+##### Add Phone
+
+An existing manufacturer must be referenced for a phone to be added.
+
+```
+mutation AddPhone($input: AddPhoneInput!) {
+  addPhone(input: $input) {
+    ... on Phone {
+      id
+      name
+      manufacturer {
+        id
+        name
+      }
+    }
+    ... on MutationError {
+      message
+    }
+  }
+}
+```
+
+Variables:
+
+```
+{
+  "input": {
+    "manufacturer": "<MANUFACTURER_ID>",
+    "name": "iPhone X"
+  }
+}
+```
+
+### Task 2
+
+First, seed the database:
+
+```bash
+npm run schedule:seed
+```
+
+Then, run schedule:
+
+```bash
+npm run schedule:start
+```
+
+For manual testing run:
+
+```bash
+npm run schedule:cli <INPUT_DATE>
+```
+
+Where `INPUT_DATE` needs to be a parseable date string according
+to [specifications](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format),
+i.e. `YYYY-MM-DDTHH:mm:ss.sssZ` where the `:ss.sss`-part is optional. Comparison will be done using UTC time so to
+reduce confusion please use UTC time for input.
+<br>_NB_ Please note that any date will do, only the hours of the day matter for comparison. For example
+
+```bash
+npm run schedule:cli 2019-01-01T01:00Z
+```
+
+Is considered a valid date and will run.
+
+####
