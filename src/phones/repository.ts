@@ -15,7 +15,13 @@ const asPhoneModel = (phone: WithId<Document>): PhoneModel => ({
 
 export const createRepository = (db: Db): PhoneRepository & ManufacturerRepository => {
     const manufacturerByID: ManufacturerRepository['manufacturerByID'] = async (id) => {
-        const manufacturer = await db.collection('manufacturers').findOne({_id: new ObjectId(id)});
+        let manufacturer: (Document & { _id: ObjectId }) | null;
+        try {
+            manufacturer = await db.collection('manufacturers').findOne({_id: new ObjectId(id)});
+        } catch (e) {
+            console.debug(`Retrieving manufacturer ${id}`, e)
+            manufacturer = null;
+        }
         if (!manufacturer) {
             return null;
         }
@@ -43,7 +49,13 @@ export const createRepository = (db: Db): PhoneRepository & ManufacturerReposito
     }
 
     const phoneById: PhoneRepository['phoneById'] = async (id) => {
-        const phone = await db.collection('phones').findOne({_id: new ObjectId(id)});
+        let phone: (Document & { _id: ObjectId }) | null;
+        try {
+            phone = await db.collection('phones').findOne({_id: new ObjectId(id)});
+        } catch (e) {
+            console.debug(`Error retrieving phone ${id}`, e)
+            phone = null;
+        }
         if (!phone) {
             return null
         }

@@ -1,7 +1,7 @@
 import {findTask, updateTaskWith} from "./repository";
 import {Task} from "./model";
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.LOG_LEVEL !== 'debug') {
     console.debug = () => {
     }
 }
@@ -17,7 +17,7 @@ const executeTask = async (task: Task) => {
      Execute task
      ...
     */
-    console.log('Payload', task.payload)
+    console.log('Payload:', task.payload)
     await updateTaskWith(task, {last_executed_at: new Date()})
 };
 

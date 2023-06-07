@@ -117,6 +117,41 @@ Variables:
 }
 ```
 
+##### Update Phone
+
+An existing phone ID must be passed.
+
+```
+mutation AddPhone($input: AddPhoneInput!) {
+  updatePhone(input: $input) {
+    ... on Phone {
+      id
+      name
+      manufacturer {
+        id
+        name
+      }
+      
+    }
+    ... on MutationError {
+      message
+      
+    }
+  }
+}
+```
+
+Variables:
+
+```
+{
+  "input": {
+    "phone": "<PHONE_ID>",
+    "name": "iPhone XII"
+  }
+}
+```
+
 ### Task 2
 
 First, seed the database:

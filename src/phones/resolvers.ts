@@ -39,7 +39,7 @@ export const resolvers: Resolvers = {
         updatePhone: async (_, {input: {phone: phoneId, name}}, {phoneRepository}) => {
             const currentPhone = await phoneRepository.phoneById(phoneId)
             if (!currentPhone) {
-                return {__typename: 'MutationError', message: `Phone: ${currentPhone} does not exist`}
+                return {__typename: 'MutationError', message: `Phone: ${phoneId} does not exist`}
             }
 
             const updatedPhone = {...currentPhone, name};
